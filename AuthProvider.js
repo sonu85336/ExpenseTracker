@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+ 
 import AuthContext from './AuthContext';
 
 const AuthProvider = (props)=>{
@@ -8,9 +8,7 @@ const AuthProvider = (props)=>{
   const   userIsLoggedIn = !!token;
     const loginHandler  =(token)=>{
 setToken(token)
-if(userIsLoggedIn){
-   
-}
+ 
     }
     const logoutHandler =()=>{
         setToken(null)
@@ -22,6 +20,7 @@ if(userIsLoggedIn){
     logout:logoutHandler,
     tokenid:token,
     }
+    console.log(token)
 return (
     <AuthContext.Provider value={ authcontext}>
         {props.children}

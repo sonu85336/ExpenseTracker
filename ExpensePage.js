@@ -1,11 +1,13 @@
-import React from 'react'
+import React from "react";
+import PageHeader from "./PageHeader";
 
 function ExpensePage() {
   return (
-    <div>
-     Welcome to Expense Tracker
-    </div>
-  )
+    <React.Fragment>
+      <PageHeader />
+      <hr></hr>
+    </React.Fragment>
+  );
 }
 
-export default ExpensePage
+export default ExpensePage;
