@@ -5,5 +5,6 @@ import React, { createContext, useContext } from 'react'
     login:(token)=>{},
     logout:()=>{},
     tokenid:'',
+    userdata:'',
  })
  export default AuthContext;

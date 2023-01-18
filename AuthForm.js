@@ -85,6 +85,7 @@ function AuthForm() {
         .then((data) => {
           console.log(data);
           authCtx.login(data.idToken)
+          
           history.replace('/ExpensePage')
         })
         .catch((err) => {
