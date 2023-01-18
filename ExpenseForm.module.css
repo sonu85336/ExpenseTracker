@@ -1,0 +1,38 @@
+
+    .expensefrom {
+        border:2px solid   brown;
+        border-radius: 28px;
+     color: brown;
+    margin:50px  40px auto 80px ;
+    padding:20px;
+    display:inline-block;
+    }
+    .input {
+        display: flex;
+       
+    }
+    .input label{
+         margin-left:25px;
+        margin-right: 5px;
+    }
+    .expensefrom button {
+        background-color: brown;
+        color:white;
+        border-radius: 4px;
+        border:0.5px solid white;
+         
+        padding:4px;
+        
+    }
+    .expensefrom input {
+        border:0.5px solid brown;
+        margin:5px ;
+        border-radius:4px;
+    
+    }
+    .expensefrom select{
+        border:0.5px solid brown;
+        margin:5px ;
+        border-radius:4px;
+    }
+     

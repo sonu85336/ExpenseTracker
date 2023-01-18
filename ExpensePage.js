@@ -1,9 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext,useState} from "react";
 import AuthContext from "../store/AuthContext";
 import PageHeader from "./PageHeader";
 import classes from '../css/ProfileForm.module.css'
+import ExpenseForm from "./ExpenseForm";
+import ExpenseInput from "./ExpenseInput";
 function ExpensePage() {
   const authCtx = useContext(AuthContext)
+  const [printexpense,setPrintExpense]= useState([])
+  const    inputvalueHandler=(expense)=>{
+setPrintExpense((prevexpense)=>{
+  return [expense,...prevexpense]
+})
+  }
   const submitHandler =(event)=>{
 event.preventDefault()
 
@@ -37,6 +45,7 @@ fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSy
   alert(err.message)
 })
   }
+  console.log(printexpense,'from expnesepage')
   return (
     <React.Fragment>
       <PageHeader />
@@ -44,7 +53,9 @@ fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSy
         <div className={classes.expensepage}> <label htmlFor="emailverification">Please Verify Your Email..</label>
     <button   >Email Verificatin</button></div>
       </form>
-     
+      <ExpenseForm  ondata = {inputvalueHandler}></ExpenseForm>
+<ExpenseInput  printexpense={printexpense}  ></ExpenseInput>
+      
     </React.Fragment>
   );
 }
