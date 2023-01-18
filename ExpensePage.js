@@ -39,7 +39,7 @@ fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSy
   }
   return (
     <React.Fragment>
-      <PageHeader />ss
+      <PageHeader />
       <hr></hr><form  onSubmit={submitHandler}>
         <div className={classes.expensepage}> <label htmlFor="emailverification">Please Verify Your Email..</label>
     <button   >Email Verificatin</button></div>

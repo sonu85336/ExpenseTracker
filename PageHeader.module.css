@@ -11,4 +11,14 @@
     padding:6px;
      
 }
+
+.logout button{
+    background-color: brown;
+    border:none;
+    border-radius:5px;
+    color:white;
+    padding: 4px;
+    margin-left:94%;
+    margin-top: 1%;
+}
  
