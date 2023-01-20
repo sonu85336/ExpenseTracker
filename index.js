@@ -1,9 +1,28 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import ReactDOM from 'react-dom/client';
-import AuthProvider from './component/store/AuthProvider'
-import './index.css';
-import App from './App';
+import {createStore} from 'redux'
+const couterReducer = (state = {counter:0},action)=>{
+if(action.type === 'increment'){
+    
+    return {
+    counter:state.counter+5,
+}
+}
+if(action.type === 'decrement'){
+    return {
+        counter:state.counter-5,
+    }
+}
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<BrowserRouter><AuthProvider><App /></AuthProvider></BrowserRouter>);
+return state;
+
+}
+
+const store =createStore(couterReducer);
+
+export default store;
+// const counterSubscriber = ()=>{
+//     const  latestState = store.getState()
+//     console.log(latestState)
+// }
+
+// store.subscribe(counterSubscriber)
+// store.dispatch({type:'increment'})
