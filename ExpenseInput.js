@@ -1,7 +1,11 @@
 import React from "react";
 import classes from "../css/ExpenseInput.module.css";
+import { useDispatch } from "react-redux";
+import { ExpenseAction } from "../store/AuthRedux";
+import { useSelector } from "react-redux";
 const ExpenseInput = (props) => {
-  console.log(props.item, "from inpuptpage");
+  const dispatch = useDispatch()
+  
   const deleteHandler = (item) => {
     props.onRemove(item);
     const inputid = item.id
@@ -32,12 +36,15 @@ try{
 const data = await response.json()
 if(response.ok){
   props.EditExpenseHandler(item)
+ 
 }else{
-  throw data.erro
+  throw data.error
 }
 }catch(error){
   console.log(error.message)
 }
+
+
   }
 
   return (
@@ -59,8 +66,9 @@ if(response.ok){
               </span>
               <hr></hr>
               </li></ul>
+             
        
-      </div>
+      </div> 
     </React.Fragment>
   );
 };

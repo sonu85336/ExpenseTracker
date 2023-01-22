@@ -1,49 +1,69 @@
 //import { useRef, useState } from 'react';
 import classes from "../css/ExpenseForm.module.css";
 import ExpenseInput from "./ExpenseInput";
-import React, {
-  useCallback,
-  useRef,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import AuthContext from "../store/AuthContext";
+import React, { useCallback, useRef, useEffect, useState } from "react";
 
+import { ExpenseAction, themeAction } from "../store/AuthRedux";
+import { useSelector, useDispatch } from "react-redux";
+import { CSVLink } from "react-csv";
 // import classes from "../css/ProfileForm.module.css";
 
 // import ExpenseInput from "./ExpenseInput";
 const ExpenseForm = (props) => {
+  const showExpense = useSelector((state) => state.expenseitem.expense);
+  const totalAmount = useSelector((state) => state.expenseitem.totalAmount);
+  const activePremium = useSelector((state) => state.theme.cvandDark);
+  const dispatch = useDispatch();
+  const premium = useSelector((state) => state.theme.premium);
+
   const [enteredExpense, setEnteredExpense] = useState("");
   const [enteredDetails, setEnteredDetails] = useState("");
   const [enteredCategory, setEnteredCategory] = useState("");
   const [printexpense, setPrintExpense] = useState([]);
+  //const [activePremium,setActivepremium]= useState(false)
+  // const [premium, setPremium] = useState(false);
   const amountRef = useRef();
   const DetailRef = useRef();
   const CategoryRef = useRef();
-  const EditExpenseHandler = (item) => {
-    amountRef.current.value = item.enteredExpense;
-    DetailRef.current.value = item.enteredDetails;
-    CategoryRef.current.value = item.enteredCategory;
+const activePremiumHandler = ()=>{
+dispatch(themeAction.cvDarkMode(true))
+}
+  const headers = [
+    { label: "Expense Amount", key: "enteredExpense" },
+    { label: "Details", key: "enteredDetails" },
+    { label: "Category", key: "enteredCategory" },
+  ];
 
-    const updatedExpense = printexpense.filter((expense) => {
-      return expense.id !== item.id;
-    });
-    setPrintExpense(updatedExpense);
+  const csvLink = {
+    filename: "file.csv",
+    headers: headers,
+    data: showExpense,
+  };
+  const EditExpenseHandler = (data) => {
+    let removeitem = showExpense.findIndex((item) => item.id === data.id);
+    const arr = [...showExpense];
+    const updateItems = arr.splice(removeitem, 1);
+    console.log(updateItems, "from edit");
+    // setPrintExpense(arr)
+    dispatch(ExpenseAction.editExpense(arr));
+
+    amountRef.current.value = data.enteredExpense;
+    DetailRef.current.value = data.enteredDetails;
+    CategoryRef.current.value = data.enteredCategory;
   };
   /********************************** */
 
-  console.log(printexpense, "from expnesepage");
+  // console.log(printexpense, "from expnesepage");
   const removeItemHanler = (data) => {
-    let removeitem = printexpense.findIndex((item) => item.id === data.id);
-    const arr = [...printexpense];
+    let removeitem = showExpense.findIndex((item) => item.id === data.id);
+    const arr = [...showExpense];
     const updateItems = arr.splice(removeitem, 1);
     console.log(updateItems);
 
-    setPrintExpense(arr);
+    // setPrintExpense(arr);
+    dispatch(ExpenseAction.removeExpense(arr));
   };
 
-  
   /************************ */
   const expenseHandler = (event) => {
     setEnteredExpense(event.target.value);
@@ -77,43 +97,58 @@ const ExpenseForm = (props) => {
       .catch((err) => {
         console.log(err.message);
       });
-    setPrintExpense((prevexpense) => {
-      return [obj, ...prevexpense];
-    });
-  };
-  const fetchExpenses = useCallback(async () => {
-    try {
-      const res = await fetch(
-        "https://login-auth-460ac-default-rtdb.firebaseio.com/Expense.json",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await res.json();
-      if (res.ok) {
-        const newdata = [];
-        for (let key in data) {
-          newdata.push({ id: key, ...data[key] });
-        }
-
-        setPrintExpense(newdata);
-      } else {
-        throw data.error;
-      }
-    } catch (error) {
-      console.log(error.message);
+    // setPrintExpense((prevexpense) => {
+    //   return [obj, ...prevexpense];
+    // });
+    if (totalAmount > 10000) {
+      dispatch(themeAction.activePremium(true));
     }
-  });
+  };
+  useEffect(() => {
+    if (totalAmount > 10000) {
+      dispatch(themeAction.activePremium(true));
+    }
+  }, [totalAmount]);
 
   useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const res = await fetch(
+          "https://login-auth-460ac-default-rtdb.firebaseio.com/Expense.json",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        if (res.ok) {
+          const newdata = [];
+          for (let key in data) {
+            newdata.push({ id: key, ...data[key] });
+          }
+
+          //setPrintExpense(newdata);
+          dispatch(ExpenseAction.addexpense(newdata));
+        } else {
+          throw data.error;
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
     fetchExpenses();
   }, []);
 
   return (
     <div>
+      {premium && (
+        <div className={classes.premium}>
+          <button onClick={activePremiumHandler}>Active Premium</button>
+        </div>
+      )}
+
       <div className={classes.expensefrom}>
         <h1>EXPENSE TRACKER</h1>
         <form onSubmit={SubmitHandler}>
@@ -124,10 +159,11 @@ const ExpenseForm = (props) => {
             </div>{" "}
             <div>
               <input
-                type="text"
+                type="number"
                 ref={amountRef}
                 value={enteredExpense}
                 onChange={expenseHandler}
+                id="enteredExpense"
               ></input>
             </div>
             <div>
@@ -139,6 +175,7 @@ const ExpenseForm = (props) => {
                 type="text"
                 ref={DetailRef}
                 value={enteredDetails}
+                id="enteredDetails"
                 onChange={detailsHandler}
               ></input>
             </div>
@@ -148,6 +185,7 @@ const ExpenseForm = (props) => {
                 ref={CategoryRef}
                 onChange={categoryHandler}
                 value={enteredCategory}
+                id="enteredCategory"
               >
                 <option>Food</option>
                 <option>Petrol</option>
@@ -163,7 +201,7 @@ const ExpenseForm = (props) => {
           </div>
         </form>
       </div>
-      {printexpense.map((item) => (
+      {showExpense.map((item) => (
         <ExpenseInput
           key={item.__id}
           id={item.id}
@@ -172,6 +210,12 @@ const ExpenseForm = (props) => {
           EditExpenseHandler={EditExpenseHandler}
         />
       ))}
+      <div>
+        <h1>Total Amount = {totalAmount}</h1>
+      </div>
+    {premium&&activePremium&&<div  className={classes.csv}>
+        <CSVLink {...csvLink}><button >Download CSV</button></CSVLink>
+      </div>}  
     </div>
   );
 };

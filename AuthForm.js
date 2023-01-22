@@ -1,11 +1,16 @@
 import React, { useState, useRef, useContext } from "react";
 import PasswordChange from "./PasswordChange";
 import { NavLink, useHistory } from "react-router-dom";
+
 import classes from "./AuthForm.module.css";
-import AuthContext from "../store/AuthContext";
+// import AuthContext from "../store/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../store/AuthRedux";
 function AuthForm() {
+  const dispatch = useDispatch();
+
   const history = useHistory();
-  const authCtx = useContext(AuthContext);
+  // const authCtx = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
@@ -84,9 +89,11 @@ function AuthForm() {
           }
         })
         .then((data) => {
-          console.log(data);
-          authCtx.login(data.idToken);
-
+          // console.log(data);
+          // authCtx.login(data.idToken);
+          dispatch(authActions.login(data.idToken));
+          localStorage.setItem("token", data.idToken);
+          localStorage.setItem("email", data.email);
           history.replace("/ExpensePage");
         })
         .catch((err) => {
@@ -143,7 +150,7 @@ function AuthForm() {
               </div>
             </div>
           )}
-        
+
           <div>
             <button>{isLogin ? "Login" : "Sing up"}</button>
             <div>
@@ -153,11 +160,18 @@ function AuthForm() {
             </div>
           </div>
         </form>
-       <div>
-            {isLogin && <NavLink 
-           style={{textDecoration:"none" ,color:'brown'}}   to="/ChangePassword"  > Forgot password?  </NavLink> }
-          </div> 
-      </div> 
+        <div>
+          {isLogin && (
+            <NavLink
+              style={{ textDecoration: "none", color: "brown" }}
+              to="/ChangePassword"
+            >
+              {" "}
+              Forgot password?{" "}
+            </NavLink>
+          )}
+        </div>
+      </div>
     </section>
   );
 }

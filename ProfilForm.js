@@ -2,9 +2,11 @@ import React, { useRef, useContext, useEffect } from "react";
 import classes from "../css/PageHeader.module.css";
 import classes1 from "../css/ProfileForm.module.css";
 import { NavLink } from "react-router-dom";
-import AuthContext from "../store/AuthContext";
+//import AuthContext from "../store/AuthContext";
+import { useSelector } from "react-redux";
 function ProfilForm() {
-  const authCtx = useContext(AuthContext);
+  //const authCtx = useContext(AuthContext);
+  const  idtoken = useSelector((state)=>state.auth.token)
   const nameRef = useRef();
   const photourlRef = useRef();
 
@@ -17,7 +19,8 @@ function ProfilForm() {
       {
         method: "POST",
         body: JSON.stringify({
-          idToken: authCtx.tokenid,
+          //      idToken: authCtx.tokenid,
+          idToken:idtoken,
           displayName: enteredName,
           photoUrl: enteredUrl,
 

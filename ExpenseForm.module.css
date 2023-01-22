@@ -24,6 +24,15 @@
         padding:4px;
         
     }
+    .premium button {
+        background-color: brown;
+        color:white;
+        border-radius: 4px;
+        border:0.5px solid white;
+         
+        padding:4px;
+        
+    }
     .expensefrom input {
         border:0.5px solid brown;
         margin:5px ;
@@ -35,4 +44,16 @@
         margin:5px ;
         border-radius:4px;
     }
-     
+
+    .csv button {
+        background-color: brown;
+        color:white;
+        border-radius: 4px;
+        border:0.5px solid white;
+         margin-left:85%;
+         margin-bottom:2%;
+       
+        padding:4px;
+        
+    }
+   

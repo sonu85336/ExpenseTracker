@@ -1,13 +1,13 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import AuthContext from "../store/AuthContext";
+//import AuthContext from "../store/AuthContext";
 import PageHeader from "./PageHeader";
 import classes from "../css/ProfileForm.module.css";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseInput from "./ExpenseInput";
-
+import { useSelector } from "react-redux";
 function ExpensePage() {
-  const authCtx = useContext(AuthContext);
-
+  //const authCtx = useContext(AuthContext);
+ const idtoken = useSelector((state)=>state.auth.token)
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -17,7 +17,8 @@ function ExpensePage() {
         method: "POST",
         body: JSON.stringify({
           requestType: "VERIFY_EMAIL",
-          idToken: authCtx.tokenid,
+          //idToken: authCtx.tokenid,
+          idToken:idtoken,
         }),
         headers: {
           "Content-Type": "application/json",
