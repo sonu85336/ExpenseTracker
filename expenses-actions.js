@@ -1,7 +1,12 @@
 import axios from "axios";
 import { ExpenseAction } from "./AuthRedux";
+if (!localStorage.getItem("email")) {
+  localStorage.setItem("email", "");
+}
 
-const email = localStorage.getItem("email").replace(".", "").replace("@", "");
+ let  email = localStorage.getItem("email").replace(".", "").replace("@", "");
+
+ //const email = emailid.replace(".", "").replace("@", "")
 export const fectingAllData = () => {
   return async (dispatch) => {
     const fecthData = async () => {

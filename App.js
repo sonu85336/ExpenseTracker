@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import AuthForm from "./component/Auth/AuthForm";
 import { Route, Switch, Redirect } from "react-router-dom";
-import ExpensePage from "./component/pages/ExpensePage";
+//import ExpensePage from "./component/pages/ExpensePage";
 //import AuthContext from "./component/store/AuthContext";
-import ProfilForm from "./component/pages/ProfilForm";
-import Logoutpage from "./component/pages/Logoutpage";
-import PasswordChange from "./component/Auth/PasswordChange";
+//import ProfilForm from "./component/pages/ProfilForm";
+//import Logoutpage from "./component/pages/Logoutpage";
+//import PasswordChange from "./component/Auth/PasswordChange";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -17,6 +17,13 @@ import ReactSwitch from "react-js-switch";
 import "./component/css/Dark_lightMode.css";
 import { useHistory } from "react-router-dom";
 import { fectingAllData } from "./component/store/expenses-actions";
+import { Suspense } from "react";
+const  ExpensePage   =  React.lazy(()=>import('./component/pages/ExpensePage'))
+
+const ProfilForm = React.lazy(()=>import("./component/pages/ProfilForm"))
+const Logoutpage =  React.lazy(()=>import ("./component/pages/Logoutpage"))
+const PasswordChange = React.lazy(()=>import("./component/Auth/PasswordChange"))
+
 
 function App() {
   // const authCtx = useContext(AuthContext);
@@ -37,6 +44,7 @@ function App() {
 
   return (
     <React.Fragment>
+      <Suspense  fallback={<p>Loading...</p>}>
       <div id={darkMode}>
         {" "}
         {isLoggedIn && activePremium && (
@@ -62,7 +70,7 @@ function App() {
           )}
           {isLoggedIn && (
             <Route path="/ExpensePage:ProfilePage">
-              <ProfilForm />
+              <ProfilForm  />
             </Route>
           )}
           {!isLoggedIn && (
@@ -72,6 +80,7 @@ function App() {
           )}
         </Switch>
       </div>
+      </Suspense>
     </React.Fragment>
   );
 }
