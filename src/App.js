@@ -5,6 +5,8 @@ import {  useSelector,useDispatch } from 'react-redux';
 import React, { useEffect } from 'react';
 import { cartshowAction } from './Store/storeindex';
 import Notification from './components/UI/Notification';
+import { cartActions } from './Store/storeindex';
+import {fetchCartData }from './Store/Action'
 let isInitial = true;
 function App() {
   const dispatch = useDispatch()
@@ -12,12 +14,9 @@ function App() {
   const cart = useSelector((state)=>state.cart)
   const notification = useSelector((state)=>state.visible.notification)
 
-  // useEffect(()=>{
-  //   fetch('https://reduxpractice-c0253-default-rtdb.firebaseio.com/cart.json',{
-  //     method:'PUT',
-  //     body:JSON.stringify(cart),
-  //   })
-  // },[cart])
+  useEffect(()=>{
+   dispatch(fetchCartData())
+  },[dispatch])
   useEffect(() => {
     const sendCartData = async () => {
       dispatch(
@@ -63,6 +62,27 @@ function App() {
       );
     });
   }, [cart, dispatch]);
+
+//   useEffect(()=>{
+//     const getdata=  async ()=>{
+    
+//     try{  const res = await fetch(
+//         'https://reduxpractice-c0253-default-rtdb.firebaseio.com/cart.json',
+//         {
+//           method: 'GET',
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+//       const data = await res.json()
+//           dispatch(cartActions.fetchdata(data))
+//     }catch(error){
+//       console.log(error.message);
+//     }
+//   }
+//   getdata()
+// },[])
 
   return (<React.Fragment>
    {notification&& <Notification  status= {notification.status}
