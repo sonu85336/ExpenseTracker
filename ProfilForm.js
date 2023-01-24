@@ -1,14 +1,17 @@
-import React, { useRef, useContext, useEffect } from "react";
+import React, { useRef, useContext, useEffect, useState } from "react";
 import classes from "../css/PageHeader.module.css";
 import classes1 from "../css/ProfileForm.module.css";
 import { NavLink } from "react-router-dom";
 //import AuthContext from "../store/AuthContext";
 import { useSelector } from "react-redux";
+import axios from "axios";
 function ProfilForm() {
   //const authCtx = useContext(AuthContext);
-  const  idtoken = useSelector((state)=>state.auth.token)
+  const idtoken = useSelector((state) => state.auth.token);
   const nameRef = useRef();
   const photourlRef = useRef();
+  const [getData, setData] = useState([]);
+  const [checking, setChecking] = useState(false);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -20,7 +23,7 @@ function ProfilForm() {
         method: "POST",
         body: JSON.stringify({
           //      idToken: authCtx.tokenid,
-          idToken:idtoken,
+          idToken: idtoken,
           displayName: enteredName,
           photoUrl: enteredUrl,
 
@@ -51,9 +54,38 @@ function ProfilForm() {
         alert(err.message);
       });
   };
+  // const get = JSON.stringify(data);
+  // localStorage.setItem("data", get);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const obj = {
+        //idToken: authCtx.tokenid,
+        idToken: idtoken,
+      };
+      try {
+        const res = await axios.post(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDcPWz5JxqUMyayXb7x_M4yzUlvx2qQeJ8",
+          obj
+        );
 
-  const getdata = JSON.parse(localStorage.getItem("data"));
+        const data = JSON.stringify(res.data);
+        localStorage.setItem("data", data);
+        setChecking(true);
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+    fetchProfile();
+  }, []);
 
+  useEffect(() => {
+    if (checking) {
+      setData(JSON.parse(localStorage.getItem("data")));
+      setChecking(false);
+    }
+  }, [checking]);
+
+  console.log(getData)
   return (
     <React.Fragment>
       <header className={classes.pageheader}>
@@ -87,7 +119,7 @@ function ProfilForm() {
               <input
                 type="text"
                 ref={nameRef}
-                defaultValue={getdata.users[0].displayName}
+                defaultValue={getData.users[0].displayName}
               ></input>
             </div>
             <div>
@@ -99,7 +131,7 @@ function ProfilForm() {
               <input
                 type="text"
                 ref={photourlRef}
-                defaultValue={getdata.users[0].photoUrl}
+                defaultValue={getData.users[0].photoUrl}
               ></input>
             </div>
           </div>
